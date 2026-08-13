@@ -1,46 +1,40 @@
-import { Hero, Ticker } from "@/components/home/Hero";
+import { Ticker } from "@/components/home/Hero";
 import {
-  ClosingCTA,
-  CollectionEditorial,
-  Ethos,
-  Intelligence,
-  JournalStrip,
-  Lifestyle,
-} from "@/components/home/Sections";
-import { DeveloperRail } from "@/components/home/DeveloperRail";
-import { RegionMap, Voices } from "@/components/home/MapAndVoices";
-import {
-  getDevelopers,
-  getLocations,
-  getPosts,
-  getProjects,
-  getTestimonials,
-} from "@/lib/data";
+  HeroSlider,
+  QuickSearch,
+  FeaturedShowcase,
+  FiveBenefits,
+  SimpleProcess,
+  PodcastCard,
+  JourneyForm,
+  LatestBlogs,
+  FAQAccordion,
+} from "@/components/home/HomeSections";
+import { RegionMap } from "@/components/home/MapAndVoices";
+import { getProjects, getPosts, getLocations } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [projects, developers, locations, posts, testimonials] = await Promise.all([
+  const [projects, posts, locations] = await Promise.all([
     getProjects(),
-    getDevelopers(),
-    getLocations(),
     getPosts(),
-    getTestimonials(),
+    getLocations(),
   ]);
 
   return (
     <>
-      <Hero />
+      <HeroSlider projects={projects} />
       <Ticker />
-      <Ethos />
-      <CollectionEditorial projects={projects} />
-      <Intelligence />
-      <DeveloperRail developers={developers} />
-      <Lifestyle />
+      <QuickSearch />
+      <FeaturedShowcase />
+      <FiveBenefits />
+      <SimpleProcess />
+      <PodcastCard />
       <RegionMap locations={locations} />
-      <Voices testimonials={testimonials} />
-      <JournalStrip posts={posts} />
-      <ClosingCTA />
+      <LatestBlogs posts={posts} />
+      <JourneyForm />
+      <FAQAccordion />
     </>
   );
 }

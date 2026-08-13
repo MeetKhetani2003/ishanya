@@ -5,12 +5,11 @@ import { ProjectsExplorer } from "@/components/project/ProjectsExplorer";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "The Collection",
-  description:
-    "A curated collection of residences across Powai, Parel, Panvel, Ulwe, Karjat and Khalapur — including Isle of Calm by GHP Group.",
+  title: "Projects",
+  description: "Explore our private collection of pre-vetted luxury residential and commercial addresses.",
 };
 
-export default async function CollectionPage() {
+export default async function ProjectsPage() {
   const projects = await getProjects();
   return <ProjectsExplorer projects={projects} />;
 }

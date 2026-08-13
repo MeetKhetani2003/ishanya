@@ -9,7 +9,7 @@ import { Logo } from "@/components/ui/Logo";
 import { BRAND } from "@/lib/content";
 
 const PRIMARY = [
-  { href: "/collection", label: "The Collection" },
+  { href: "/projects", label: "Projects" },
   { href: "/developers", label: "Developers" },
   { href: "/investment", label: "Intelligence" },
   { href: "/locations", label: "Locations" },
@@ -18,7 +18,7 @@ const PRIMARY = [
 
 const MENU = [
   { href: "/", label: "Home", n: "01" },
-  { href: "/collection", label: "The Collection", n: "02" },
+  { href: "/projects", label: "Projects", n: "02" },
   { href: "/developers", label: "Developers", n: "03" },
   { href: "/investment", label: "Investment Intelligence", n: "04" },
   { href: "/locations", label: "Locations", n: "05" },
