@@ -16,9 +16,8 @@ const COLUMNS = [
     title: "Intelligence",
     links: [
       { href: "/investment", label: "Investment Intelligence" },
-      { href: "/journal", label: "Journal" },
+      { href: "/journal", label: "Blogs" },
       { href: "/testimonials", label: "Client Stories" },
-      { href: "/about", label: "About Ishanaya" },
     ],
   },
   {
@@ -26,7 +25,6 @@ const COLUMNS = [
     links: [
       { href: "/concierge", label: "Concierge" },
       { href: "/book-visit", label: "Book a Private Visit" },
-      { href: "/contact", label: "Contact" },
       { href: "/admin", label: "Studio (CMS)" },
     ],
   },

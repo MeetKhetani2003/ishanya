@@ -11,9 +11,9 @@ import { BRAND } from "@/lib/content";
 const PRIMARY = [
   { href: "/projects", label: "Projects" },
   { href: "/developers", label: "Developers" },
-  { href: "/investment", label: "Intelligence" },
-  { href: "/locations", label: "Locations" },
-  { href: "/journal", label: "Journal" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/journal", label: "Blogs" },
 ];
 
 const MENU = [
@@ -23,7 +23,7 @@ const MENU = [
   { href: "/investment", label: "Investment Intelligence", n: "04" },
   { href: "/locations", label: "Locations", n: "05" },
   { href: "/gallery", label: "Gallery", n: "06" },
-  { href: "/journal", label: "Journal", n: "07" },
+  { href: "/journal", label: "Blogs", n: "07" },
   { href: "/testimonials", label: "Client Stories", n: "08" },
   { href: "/about", label: "About", n: "09" },
   { href: "/concierge", label: "Concierge", n: "10" },
