@@ -1,6 +1,5 @@
-import { asc, eq, and, desc, sql } from "drizzle-orm";
-import { db } from "@/db";
-import { cmsEntries, leads, settings } from "@/db/schema";
+import { connectToDatabase } from "@/db";
+import { CmsEntryModel, LeadModel, SettingModel } from "@/db/models";
 import {
   DEVELOPERS,
   LOCATIONS,
@@ -96,26 +95,31 @@ function seedSpecs(): SeedSpec[] {
 let seedPromise: Promise<void> | null = null;
 
 async function ensureSeed() {
+  await connectToDatabase();
+  
   if (!seedPromise) {
     seedPromise = (async () => {
       const specs = seedSpecs();
       for (const spec of specs) {
         for (let i = 0; i < spec.rows.length; i++) {
           const row = spec.rows[i];
-          await db
-            .insert(cmsEntries)
-            .values({
-              type: spec.type,
-              slug: row.slug,
-              title: row.title,
-              summary: row.summary,
-              image: row.image,
-              featured: row.featured,
-              published: true,
-              position: i,
-              data: row.data,
-            })
-            .onConflictDoNothing();
+          await CmsEntryModel.updateOne(
+            { type: spec.type, slug: row.slug },
+            {
+              $setOnInsert: {
+                type: spec.type,
+                slug: row.slug,
+                title: row.title,
+                summary: row.summary,
+                image: row.image,
+                featured: row.featured,
+                published: true,
+                position: i,
+                data: row.data,
+              }
+            },
+            { upsert: true }
+          );
         }
       }
     })().catch((err) => {
@@ -129,11 +133,9 @@ async function ensureSeed() {
 async function readEntries<T>(type: EntryType, fallback: T[]): Promise<T[]> {
   try {
     await ensureSeed();
-    const rows = await db
-      .select()
-      .from(cmsEntries)
-      .where(and(eq(cmsEntries.type, type), eq(cmsEntries.published, true)))
-      .orderBy(asc(cmsEntries.position), asc(cmsEntries.id));
+    const rows = await CmsEntryModel.find({ type, published: true })
+      .sort({ position: 1, _id: 1 })
+      .lean();
     if (!rows.length) return fallback;
     return rows.map((r) => r.data as T);
   } catch {
@@ -169,49 +171,51 @@ export async function getPostBySlug(slug: string) {
 
 export async function getAllEntries(type: EntryType) {
   await ensureSeed();
-  return db
-    .select()
-    .from(cmsEntries)
-    .where(eq(cmsEntries.type, type))
-    .orderBy(asc(cmsEntries.position), asc(cmsEntries.id));
+  const docs = await CmsEntryModel.find({ type })
+    .sort({ position: 1, _id: 1 })
+    .lean();
+  
+  return docs.map(d => ({ ...d, id: (d._id as any).toString() }));
 }
 
 export async function getEntry(type: EntryType, slug: string) {
-  const rows = await db
-    .select()
-    .from(cmsEntries)
-    .where(and(eq(cmsEntries.type, type), eq(cmsEntries.slug, slug)))
-    .limit(1);
-  return rows[0] ?? null;
+  await connectToDatabase();
+  const row = await CmsEntryModel.findOne({ type, slug }).lean();
+  if (row) {
+    return { ...row, id: (row._id as any).toString() };
+  }
+  return null;
 }
 
 export async function getLeads() {
-  return db.select().from(leads).orderBy(desc(leads.createdAt)).limit(200);
+  await connectToDatabase();
+  const docs = await LeadModel.find()
+    .sort({ createdAt: -1 })
+    .limit(200)
+    .lean();
+  return docs.map(d => ({ ...d, id: (d._id as any).toString() }));
 }
 
 export async function getDashboardCounts() {
-  const [entryCounts, leadCount, newLeads] = await Promise.all([
-    db
-      .select({ type: cmsEntries.type, count: sql<number>`count(*)::int` })
-      .from(cmsEntries)
-      .groupBy(cmsEntries.type),
-    db.select({ count: sql<number>`count(*)::int` }).from(leads),
-    db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(leads)
-      .where(eq(leads.status, "New")),
+  await connectToDatabase();
+  const entryCounts = await CmsEntryModel.aggregate([
+    { $group: { _id: "$type", count: { $sum: 1 } } }
   ]);
-  const byType = Object.fromEntries(entryCounts.map((r) => [r.type, r.count]));
+  const leadCount = await LeadModel.countDocuments();
+  const newLeads = await LeadModel.countDocuments({ status: "New" });
+
+  const byType = Object.fromEntries(entryCounts.map((r) => [r._id, r.count]));
   return {
     byType,
-    leads: leadCount[0]?.count ?? 0,
-    newLeads: newLeads[0]?.count ?? 0,
+    leads: leadCount,
+    newLeads: newLeads,
   };
 }
 
 export async function getSettings() {
   try {
-    const rows = await db.select().from(settings);
+    await connectToDatabase();
+    const rows = await SettingModel.find().lean();
     return Object.fromEntries(rows.map((r) => [r.key, r.value]));
   } catch {
     return {} as Record<string, string>;
@@ -219,11 +223,10 @@ export async function getSettings() {
 }
 
 export async function saveSetting(key: string, value: string) {
-  await db
-    .insert(settings)
-    .values({ key, value })
-    .onConflictDoUpdate({
-      target: settings.key,
-      set: { value, updatedAt: new Date() },
-    });
+  await connectToDatabase();
+  await SettingModel.findOneAndUpdate(
+    { key },
+    { value },
+    { upsert: true }
+  );
 }

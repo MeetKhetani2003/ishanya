@@ -38,9 +38,8 @@ export function HeroSlider({ projects }: HeroSliderProps) {
         {featured.map((p, idx) => (
           <div
             key={p.slug}
-            className={`absolute inset-0 transition-all duration-[1200ms] ${
-              idx === index ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
-            }`}
+            className={`absolute inset-0 transition-all duration-[1200ms] ${idx === index ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
+              }`}
           >
             <Link href={`/projects/${p.slug}`} className="absolute inset-0 z-10" aria-label={`View ${p.name}`}>
               <div className="absolute inset-0 bg-ink/30 z-10" />
@@ -53,7 +52,7 @@ export function HeroSlider({ projects }: HeroSliderProps) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent z-20" />
               <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-transparent to-transparent z-20" />
-              
+
               <div className="absolute bottom-16 left-6 right-6 md:bottom-20 md:left-12 max-w-2xl z-30">
                 <p className="eyebrow text-gold-soft mb-3">{p.locality} · {p.city}</p>
                 <h2 className="display text-4xl sm:text-5xl lg:text-6xl text-ivory leading-none">
@@ -100,9 +99,8 @@ export function HeroSlider({ projects }: HeroSliderProps) {
               <button
                 key={idx}
                 onClick={() => setIndex(idx)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  idx === index ? "w-8 bg-gold" : "w-2 bg-ivory/30"
-                }`}
+                className={`h-1.5 rounded-full transition-all duration-500 ${idx === index ? "w-8 bg-gold" : "w-2 bg-ivory/30"
+                  }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />
             ))}
@@ -148,6 +146,8 @@ export function QuickSearch() {
                 <option value="All">All Categories</option>
                 <option value="Residential">Residential</option>
                 <option value="Commercial">Commercial</option>
+                <option value="holiday homes">holiday homes</option>
+
               </select>
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gold-soft pointer-events-none">▼</span>
             </div>
@@ -221,7 +221,7 @@ export function FeaturedShowcase() {
           <div className="space-y-6">
             <p className="eyebrow text-gold/70">Featured Curation</p>
             <h2 className="display text-4xl sm:text-5xl lg:text-6xl text-ivory leading-tight">
-              Isle of Calm, <br/><span className="gold-text italic">A distinctly different Powai</span>
+              Isle of Calm, <br /><span className="gold-text italic">A distinctly different Powai</span>
             </h2>
             <div className="space-y-5 text-ivory/60 leading-relaxed text-md max-w-xl">
               <p>
@@ -367,7 +367,7 @@ export function SimpleProcess() {
   return (
     <section className="bg-ink py-20 md:py-28 border-b border-ivory/5 relative overflow-hidden">
       <div className="pointer-events-none absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-gold/5 blur-[120px]" />
-      
+
       <div className="mx-auto max-w-[1600px] px-6 md:px-12 relative z-10">
         <div className="text-center mb-16">
           <p className="eyebrow text-gold/70">Our Protocol</p>
@@ -412,7 +412,7 @@ export function PodcastCard() {
   return (
     <section className="bg-ink-soft py-20 md:py-28 border-b border-ivory/5 overflow-hidden relative">
       <div className="pointer-events-none absolute -bottom-40 right-1/4 h-96 w-96 rounded-full bg-gold/5 blur-[120px]" />
-      
+
       <div className="mx-auto max-w-[1600px] px-6 md:px-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
           <div className="space-y-6">
@@ -425,11 +425,11 @@ export function PodcastCard() {
               </span>
               <span className="eyebrow text-gold/80 text-[0.66rem]">Now Streaming</span>
             </div>
-            
+
             <h2 className="display text-4xl sm:text-5xl lg:text-6xl text-ivory leading-tight">
-              Ishanaya Insights <br/><span className="gold-text italic">Address &amp; Value</span>
+              Ishanaya Insights <br /><span className="gold-text italic">Address &amp; Value</span>
             </h2>
-            
+
             <p className="lede max-w-xl">
               Join our advisory team as we sit down with micro-market analysts, legal experts, structural engineers, and design partners to break down the mechanics of private acquisition and real estate preservation.
             </p>
@@ -461,7 +461,7 @@ export function PodcastCard() {
                 <span className="eyebrow text-[0.6rem] text-gold-soft">Ep. 24 · COMMUTE INDEX</span>
                 <span className="text-gold">✦</span>
               </div>
-              
+
               <div className="z-10">
                 <h3 className="display text-2xl text-ivory mb-2">Analyzing the Atal Setu Corridor</h3>
                 <p className="text-xs text-ivory/50 leading-relaxed">
@@ -495,7 +495,7 @@ export function JourneyForm() {
           <div className="space-y-8">
             <p className="eyebrow text-gold/70">Engage</p>
             <h2 className="display text-4xl sm:text-5xl text-ivory leading-tight">
-              Ready to Start <br/><span className="gold-text italic">Your Journey?</span>
+              Ready to Start <br /><span className="gold-text italic">Your Journey?</span>
             </h2>
             <p className="lede max-w-md">
               Whether you are looking to place a residence, diversify a commercial portfolio, or seek a remote due diligence audit, our desk is structured to assist.
@@ -579,7 +579,7 @@ export function LatestBlogs({ posts }: LatestBlogsProps) {
                   className="object-cover transition-transform duration-1000 group-hover:scale-103"
                 />
               </Link>
-              
+
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
                   <div className="flex gap-3 items-center">
@@ -666,7 +666,7 @@ export function FAQAccordion() {
                     ▼
                   </span>
                 </button>
-                
+
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div

@@ -2,9 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { and, eq } from "drizzle-orm";
-import { db } from "@/db";
-import { cmsEntries, leads } from "@/db/schema";
+import { connectToDatabase } from "@/db";
+import { CmsEntryModel, LeadModel } from "@/db/models";
 import { saveSetting } from "@/lib/data";
 
 function str(fd: FormData, key: string, fallback = "") {
@@ -13,6 +12,7 @@ function str(fd: FormData, key: string, fallback = "") {
 }
 
 export async function saveEntry(formData: FormData) {
+  await connectToDatabase();
   const type = str(formData, "type");
   const originalSlug = str(formData, "originalSlug");
   const slug =
@@ -62,15 +62,16 @@ export async function saveEntry(formData: FormData) {
   };
 
   if (originalSlug) {
-    await db
-      .update(cmsEntries)
-      .set(values)
-      .where(and(eq(cmsEntries.type, type), eq(cmsEntries.slug, originalSlug)));
+    await CmsEntryModel.findOneAndUpdate(
+      { type, slug: originalSlug },
+      { $set: values }
+    );
   } else {
-    await db.insert(cmsEntries).values(values).onConflictDoUpdate({
-      target: [cmsEntries.type, cmsEntries.slug],
-      set: values,
-    });
+    await CmsEntryModel.findOneAndUpdate(
+      { type, slug },
+      { $set: values },
+      { upsert: true }
+    );
   }
 
   revalidatePath("/", "layout");
@@ -78,32 +79,33 @@ export async function saveEntry(formData: FormData) {
 }
 
 export async function deleteEntry(formData: FormData) {
+  await connectToDatabase();
   const type = str(formData, "type");
   const slug = str(formData, "slug");
-  await db
-    .delete(cmsEntries)
-    .where(and(eq(cmsEntries.type, type), eq(cmsEntries.slug, slug)));
+  await CmsEntryModel.deleteOne({ type, slug });
   revalidatePath("/", "layout");
   redirect(`/admin/content/${type}?deleted=1`);
 }
 
 export async function togglePublished(formData: FormData) {
+  await connectToDatabase();
   const type = str(formData, "type");
   const slug = str(formData, "slug");
   const next = formData.get("next") === "true";
-  await db
-    .update(cmsEntries)
-    .set({ published: next, updatedAt: new Date() })
-    .where(and(eq(cmsEntries.type, type), eq(cmsEntries.slug, slug)));
+  await CmsEntryModel.updateOne(
+    { type, slug },
+    { $set: { published: next, updatedAt: new Date() } }
+  );
   revalidatePath("/", "layout");
   revalidatePath(`/admin/content/${type}`);
 }
 
 export async function updateLeadStatus(formData: FormData) {
-  const id = Number(str(formData, "id"));
+  await connectToDatabase();
+  const id = str(formData, "id");
   const status = str(formData, "status", "New");
-  if (Number.isFinite(id)) {
-    await db.update(leads).set({ status }).where(eq(leads.id, id));
+  if (id) {
+    await LeadModel.findByIdAndUpdate(id, { $set: { status } });
   }
   revalidatePath("/admin/leads");
   revalidatePath("/admin");

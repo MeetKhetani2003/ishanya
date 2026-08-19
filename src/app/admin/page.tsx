@@ -86,7 +86,7 @@ export default async function AdminDashboard() {
               <p className="text-sm text-ivory/45">{l.email}</p>
               <p className="text-sm text-ivory/45">{l.interest || "—"}</p>
               <p className="nav-type text-gold">{l.intent}</p>
-              <p className="nav-type text-ivory/30">
+              <p className="nav-type text-ivory/30" suppressHydrationWarning>
                 {new Date(l.createdAt).toLocaleDateString("en-IN")}
               </p>
             </div>

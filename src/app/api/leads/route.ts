@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { db } from "@/db";
-import { leads } from "@/db/schema";
+import { connectToDatabase } from "@/db";
+import { LeadModel } from "@/db/models";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +19,7 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   try {
+    await connectToDatabase();
     const json = await request.json();
     const parsed = schema.safeParse(json);
     if (!parsed.success) {
@@ -27,8 +28,8 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    const [row] = await db.insert(leads).values(parsed.data).returning();
-    return NextResponse.json({ ok: true, id: row.id });
+    const lead = await LeadModel.create(parsed.data);
+    return NextResponse.json({ ok: true, id: lead._id });
   } catch {
     return NextResponse.json(
       { error: "We could not record that just now. Please call the concierge." },
