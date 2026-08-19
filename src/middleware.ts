@@ -1,35 +1,37 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { jwtVerify } from "jose";
 
-export function middleware(req: NextRequest) {
-  // We only want to protect the /admin routes
+const getJwtSecretKey = () => {
+  const secret = process.env.ADMIN_SECRET;
+  if (!secret || secret.length === 0) {
+    return "fallback-dev-secret-key-do-not-use-in-prod";
+  }
+  return secret;
+};
+
+export async function middleware(req: NextRequest) {
+  // Protect all /admin routes
   if (req.nextUrl.pathname.startsWith("/admin")) {
-    const basicAuth = req.headers.get("authorization");
+    const sessionCookie = req.cookies.get("admin_session");
 
-    const validUser = process.env.ADMIN_USER;
-    const validPass = process.env.ADMIN_PASSWORD;
-
-    // If no credentials are set in the environment, you could bypass auth,
-    // but for security we'll require them to be set to log in.
-    if (!validUser || !validPass) {
-      console.warn("ADMIN_USER and/or ADMIN_PASSWORD are not set in the environment variables.");
+    if (!sessionCookie) {
+      return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    if (basicAuth) {
-      const authValue = basicAuth.split(" ")[1];
-      const [user, pwd] = atob(authValue).split(":");
-
-      if (user === validUser && pwd === validPass) {
-        return NextResponse.next();
-      }
+    try {
+      // Verify the JWT signature
+      const { payload } = await jwtVerify(
+        sessionCookie.value,
+        new TextEncoder().encode(getJwtSecretKey())
+      );
+      
+      // Verification successful, allow request
+      return NextResponse.next();
+    } catch (err) {
+      // Token is invalid or expired
+      return NextResponse.redirect(new URL("/login", req.url));
     }
-
-    return new NextResponse("Authentication required", {
-      status: 401,
-      headers: {
-        "WWW-Authenticate": 'Basic realm="Secure Admin Area"',
-      },
-    });
   }
 
   return NextResponse.next();
