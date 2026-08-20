@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { saveEntry } from "@/app/admin/actions";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 type Props = {
   type: string;
@@ -33,6 +34,8 @@ export default function EntryForm({
 }: Props) {
   const [data, setData] = useState<Record<string, any>>(initialData);
   const [jsonError, setJsonError] = useState(false);
+  // Tracks the primary image URL (mirrors the hidden <input name="image">)
+  const [imageUrl, setImageUrl] = useState(entryImage ?? "");
 
   const field =
     "mt-2 w-full border border-ivory/12 bg-[#101010] px-4 py-3 text-sm text-ivory outline-none transition-colors focus:border-gold";
@@ -94,14 +97,16 @@ export default function EntryForm({
         <div>
           <h3 className="nav-type text-ivory/40 mb-4 border-b border-ivory/10 pb-2">Media & Theme</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <label className="block">
-              <span className="eyebrow text-ivory/40">Hero Image</span>
-              <input value={data.heroImage || ""} onChange={(e) => setField("heroImage", e.target.value)} className={field} />
-            </label>
-            <label className="block">
-              <span className="eyebrow text-ivory/40">Card Image</span>
-              <input value={data.cardImage || ""} onChange={(e) => setField("cardImage", e.target.value)} className={field} />
-            </label>
+            <ImageUpload
+              label="Hero Image"
+              value={data.heroImage || ""}
+              onChange={(url) => setField("heroImage", url)}
+            />
+            <ImageUpload
+              label="Card Image"
+              value={data.cardImage || ""}
+              onChange={(url) => setField("cardImage", url)}
+            />
             <label className="block">
               <span className="eyebrow text-ivory/40">Accent Color</span>
               <input type="color" value={data.accent || "#c3a15c"} onChange={(e) => setField("accent", e.target.value)} className="h-10 mt-2 block" />
@@ -134,18 +139,33 @@ export default function EntryForm({
         <div>
           <h3 className="nav-type text-ivory/40 mb-4 border-b border-ivory/10 pb-2">Gallery</h3>
           {(data.gallery || []).map((item: any, i: number) => (
-            <div key={i} className="flex gap-4 mb-2">
-              <input placeholder="Image URL" value={item.src || ""} onChange={(e) => {
-                const arr = [...data.gallery];
-                arr[i] = { ...item, src: e.target.value };
-                updateList("gallery", arr);
-              }} className={field} />
-              <input placeholder="Caption" value={item.caption || ""} onChange={(e) => {
-                const arr = [...data.gallery];
-                arr[i] = { ...item, caption: e.target.value };
-                updateList("gallery", arr);
-              }} className={field} />
-              <button type="button" onClick={() => updateList("gallery", data.gallery.filter((_: any, idx: number) => idx !== i))} className={btnDel}>Remove</button>
+            <div key={i} className="border border-ivory/10 p-4 mb-3 space-y-3">
+              <ImageUpload
+                label={`Image ${i + 1}`}
+                value={item.src || ""}
+                onChange={(url) => {
+                  const arr = [...data.gallery];
+                  arr[i] = { ...item, src: url };
+                  updateList("gallery", arr);
+                }}
+              />
+              <input
+                placeholder="Caption (optional)"
+                value={item.caption || ""}
+                onChange={(e) => {
+                  const arr = [...data.gallery];
+                  arr[i] = { ...item, caption: e.target.value };
+                  updateList("gallery", arr);
+                }}
+                className={field}
+              />
+              <button
+                type="button"
+                onClick={() => updateList("gallery", data.gallery.filter((_: any, idx: number) => idx !== i))}
+                className={btnDel}
+              >
+                Remove image
+              </button>
             </div>
           ))}
           <button type="button" onClick={() => updateList("gallery", [...(data.gallery || []), { src: "", caption: "" }])} className={btn}>+ Add Image</button>
@@ -412,15 +432,15 @@ export default function EntryForm({
       </label>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <label className="block md:col-span-2">
-          <span className="eyebrow text-ivory/40">Primary image path</span>
-          <input
-            name="image"
-            defaultValue={entryImage ?? ""}
-            placeholder="/images/hero-skyline.png"
-            className={field}
+        <div className="md:col-span-2">
+          <ImageUpload
+            label="Primary image"
+            value={imageUrl}
+            onChange={setImageUrl}
           />
-        </label>
+          {/* Hidden input keeps the server action interface unchanged */}
+          <input type="hidden" name="image" value={imageUrl} />
+        </div>
         <label className="block">
           <span className="eyebrow text-ivory/40">Order</span>
           <input
