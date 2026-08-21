@@ -243,21 +243,15 @@ export function FeaturedShowcase() {
 
           <div className="flex justify-center lg:justify-end">
             <div className="relative w-full max-w-md aspect-[3/4] rounded-xl overflow-hidden border border-gold/15 shadow-2xl group bg-charcoal">
-              <Image
-                src="/images/isle-of-calm.png"
-                alt="Isle of Calm Powai elevation"
-                fill
-                sizes="(max-width:1024px) 100vw, 40vw"
-                className="object-cover transition-transform duration-[2000ms] group-hover:scale-105"
+              <video
+                src="/aboutvideo.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-gold/80 flex items-center justify-center text-ink shadow-lg transform group-hover:scale-110 transition-transform duration-500 backdrop-blur-xs cursor-pointer">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6">
                 <span className="eyebrow text-[0.6rem] text-gold/80">Lake frontage view</span>
               </div>

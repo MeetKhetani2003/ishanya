@@ -106,9 +106,7 @@ async function ensureSeed() {
           await CmsEntryModel.updateOne(
             { type: spec.type, slug: row.slug },
             {
-              $setOnInsert: {
-                type: spec.type,
-                slug: row.slug,
+              $set: {
                 title: row.title,
                 summary: row.summary,
                 image: row.image,
@@ -116,6 +114,10 @@ async function ensureSeed() {
                 published: true,
                 position: i,
                 data: row.data,
+              },
+              $setOnInsert: {
+                type: spec.type,
+                slug: row.slug,
               }
             },
             { upsert: true }

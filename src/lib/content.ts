@@ -133,7 +133,7 @@ export const PROJECTS: Project[] = [
     priceFrom: "₹2.95 Cr onwards*",
     possession: "Phased handover from 2028",
     configurations: ["2 BHK", "3 BHK", "3 BHK Jodi"],
-    heroImage: "/images/isle-of-calm.png",
+    heroImage: "/images/heroimage.png",
     cardImage: "/images/isle-of-calm.png",
     gallery: [
       { src: "/images/isle-of-calm.png", caption: "Tower elevation · lake frontage" },

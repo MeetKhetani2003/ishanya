@@ -39,23 +39,14 @@ export function Hero() {
     >
       <motion.div style={{ y, scale }} className="absolute inset-0">
         <Image
-          src="/images/hero-skyline.png"
+          src="/images/heroimage.png"
           alt="Luxury skyline at golden hour"
           fill
           priority
           sizes="100vw"
           className="object-cover"
         />
-        <video
-          className="absolute inset-0 h-full w-full object-cover opacity-70"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/images/hero-skyline.png"
-        >
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
+
         <div className="absolute inset-0 bg-gradient-to-b from-ink/85 via-ink/45 to-ink" />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-transparent to-transparent" />
       </motion.div>
