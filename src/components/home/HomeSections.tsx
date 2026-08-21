@@ -244,7 +244,7 @@ export function FeaturedShowcase() {
           <div className="flex justify-center lg:justify-end">
             <div className="relative w-full max-w-md aspect-[3/4] rounded-xl overflow-hidden border border-gold/15 shadow-2xl group bg-charcoal">
               <video
-                src="/aboutvideo.mp4"
+                src="https://videos.pexels.com/video-files/8493717/8493717-uhd_4096_2160_24fps.mp4"
                 autoPlay
                 muted
                 loop
