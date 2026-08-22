@@ -4,6 +4,7 @@ import { getDashboardCounts, getLeads } from "@/lib/data";
 export const dynamic = "force-dynamic";
 
 const LABELS: Record<string, string> = {
+  heroSlide: "Hero Slides",
   project: "Projects",
   developer: "Developers",
   location: "Locations",

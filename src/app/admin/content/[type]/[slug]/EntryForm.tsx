@@ -369,6 +369,29 @@ export default function EntryForm({
     );
   };
 
+  const renderHeroSlideForm = () => {
+    return (
+      <div className="pt-4 space-y-6">
+        <label className="block">
+          <span className="eyebrow text-ivory/40">Eyebrow text (e.g. Locality · City)</span>
+          <input 
+            value={data.eyebrow || ""} 
+            onChange={(e) => setField("eyebrow", e.target.value)} 
+            className={field} 
+          />
+        </label>
+        <label className="block">
+          <span className="eyebrow text-ivory/40">Link URL</span>
+          <input 
+            value={data.linkUrl || ""} 
+            onChange={(e) => setField("linkUrl", e.target.value)} 
+            className={field} 
+          />
+        </label>
+      </div>
+    );
+  };
+
   const renderGenericForm = () => {
     return (
       <div className="pt-4">
@@ -475,7 +498,7 @@ export default function EntryForm({
 
       <div className="mt-12 border-t border-ivory/10 pt-12">
         <h2 className="display text-2xl mb-8">Detailed Content</h2>
-        {type === "project" ? renderProjectForm() : renderGenericForm()}
+        {type === "project" ? renderProjectForm() : type === "heroSlide" ? renderHeroSlideForm() : renderGenericForm()}
       </div>
 
       {/* Hidden input to pass the JSON payload to the server action */}

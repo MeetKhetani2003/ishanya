@@ -46,6 +46,8 @@ export async function saveEntry(formData: FormData) {
     data = { ...data, slug, title, excerpt: summary, image };
   } else if (type === "testimonial") {
     data = { ...data, name: title, quote: summary };
+  } else if (type === "heroSlide") {
+    data = { ...data, title, summary, image, slug };
   }
 
   const values = {

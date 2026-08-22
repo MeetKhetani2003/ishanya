@@ -7,6 +7,7 @@ import EntryForm from "./EntryForm";
 export const dynamic = "force-dynamic";
 
 const TYPES: Record<EntryType, string> = {
+  heroSlide: "Hero Slide",
   project: "Project",
   developer: "Developer",
   location: "Location",
@@ -65,6 +66,10 @@ const TEMPLATES: Record<EntryType, Record<string, unknown>> = {
     body: [""],
   },
   testimonial: { role: "", project: "", rating: 5 },
+  heroSlide: {
+    eyebrow: "Locality · City",
+    linkUrl: "/projects/",
+  },
 };
 
 type Props = {

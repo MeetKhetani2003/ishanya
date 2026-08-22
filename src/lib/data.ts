@@ -18,7 +18,8 @@ export type EntryType =
   | "developer"
   | "location"
   | "post"
-  | "testimonial";
+  | "testimonial"
+  | "heroSlide";
 
 type SeedSpec = {
   type: EntryType;
@@ -151,6 +152,8 @@ export const getLocations = () => readEntries<LocationEntry>("location", LOCATIO
 export const getPosts = () => readEntries<Post>("post", POSTS);
 export const getTestimonials = () =>
   readEntries<Testimonial>("testimonial", TESTIMONIALS);
+export const getHeroSlides = () =>
+  readEntries<Record<string, unknown>>("heroSlide", []);
 
 export async function getProjectBySlug(slug: string) {
   const all = await getProjects();

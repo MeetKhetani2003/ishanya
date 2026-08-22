@@ -6,6 +6,7 @@ import { togglePublished } from "@/app/admin/actions";
 export const dynamic = "force-dynamic";
 
 const TYPES: Record<EntryType, string> = {
+  heroSlide: "Hero Slides",
   project: "Projects",
   developer: "Developers",
   location: "Locations",

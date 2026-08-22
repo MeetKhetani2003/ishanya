@@ -11,20 +11,21 @@ import {
   FAQAccordion,
 } from "@/components/home/HomeSections";
 import { RegionMap } from "@/components/home/MapAndVoices";
-import { getProjects, getPosts, getLocations } from "@/lib/data";
+import { getProjects, getPosts, getLocations, getHeroSlides } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [projects, posts, locations] = await Promise.all([
+  const [projects, posts, locations, slides] = await Promise.all([
     getProjects(),
     getPosts(),
     getLocations(),
+    getHeroSlides(),
   ]);
 
   return (
     <>
-      <HeroSlider projects={projects} />
+      <HeroSlider slides={slides} projects={projects} />
       <Ticker />
       <QuickSearch />
       <FeaturedShowcase />

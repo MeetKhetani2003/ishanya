@@ -12,11 +12,22 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 /* ================================================================= HeroSlider */
 interface HeroSliderProps {
+  slides: any[];
   projects: Project[];
 }
 
-export function HeroSlider({ projects }: HeroSliderProps) {
-  const featured = projects.filter((p) => p.featured).slice(0, 4);
+export function HeroSlider({ slides, projects }: HeroSliderProps) {
+  const featured = slides.length > 0 
+    ? slides 
+    : projects.filter((p) => p.featured).slice(0, 4).map(p => ({
+        slug: p.slug,
+        title: p.name,
+        summary: p.subtitle,
+        image: p.heroImage,
+        eyebrow: `${p.locality} · ${p.city}`,
+        linkUrl: `/projects/${p.slug}`
+      }));
+
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -41,11 +52,11 @@ export function HeroSlider({ projects }: HeroSliderProps) {
             className={`absolute inset-0 transition-all duration-[1200ms] ${idx === index ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
               }`}
           >
-            <Link href={`/projects/${p.slug}`} className="absolute inset-0 z-10" aria-label={`View ${p.name}`}>
+            <Link href={p.linkUrl || "/"} className="absolute inset-0 z-10" aria-label={`View ${p.title}`}>
               <div className="absolute inset-0 bg-ink/30 z-10" />
               <Image
-                src={p.heroImage}
-                alt={p.name}
+                src={p.image || "/images/heroimage.png"}
+                alt={p.title || ""}
                 fill
                 priority={idx === 0}
                 className="object-cover object-center"
@@ -54,12 +65,12 @@ export function HeroSlider({ projects }: HeroSliderProps) {
               <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-transparent to-transparent z-20" />
 
               <div className="absolute bottom-16 left-6 right-6 md:bottom-20 md:left-12 max-w-2xl z-30">
-                <p className="eyebrow text-gold-soft mb-3">{p.locality} · {p.city}</p>
+                <p className="eyebrow text-gold-soft mb-3">{p.eyebrow}</p>
                 <h2 className="display text-4xl sm:text-5xl lg:text-6xl text-ivory leading-none">
-                  {p.name}
+                  {p.title}
                 </h2>
                 <p className="display text-lg sm:text-xl italic text-ivory/60 mt-3">
-                  {p.subtitle}
+                  {p.summary}
                 </p>
               </div>
             </Link>
